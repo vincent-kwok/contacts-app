@@ -10,17 +10,49 @@ puts "[5] Delete a contact"
 
 input_option = gets.chomp
 if input_option == "1"
-  response = Unirest.get("http://localhost:3000/v1/first_contact")
+  response = Unirest.get("http://localhost:3000/v1/contacts")
   contact = response.body
   puts JSON.pretty_generate(contact)
 elsif input_option == "2"
-  response = Unirest.post("http://localhost:3000/v1/all_contacts")
-  contacts = response.body
-  puts JSON.pretty_generate(contacts)
+  params = {}
+  print "First Name: "
+  params["first_name"] = gets.chomp
+  print "Last Name: "
+  params["last_name"] = gets.chomp
+  print "Email: "
+  params["email"] = gets.chomp
+  print "Phone Number: "
+  params["phone_number"] = gets.chomp  
+  response = Unirest.post("http://localhost:3000/v1/contacts", parameters: params)
+  contact = response.body
+  puts JSON.pretty_generate(contact)
 elsif input_option == "3"
-  response = Unirest.get("http://localhost:3000/v1/first_contact")
+  print "Enter ID: "
+  input_id = gets.chomp
+  response = Unirest.get("http://localhost:3000/v1/contacts/#{input_id}")
+  contact = response.body
+  puts JSON.pretty_generate(contact)
 elsif input_option == "4"
-  response = Unirest.patch("http://localhost:3000/v1/first_contact")
+  print "Enter ID to update: "
+  input_id = gets.chomp
+  response = Unirest.patch("http://localhost:3000/v1/contacts/#{input_id}")
+  contact = response.body
+  params = {}
+  print "Update First Name: "
+  params["first_name"] = gets.chomp
+  print "Update Last Name: "
+  params["last_name"] = gets.chomp
+  print "Update Email: "
+  params["email"] = gets.chomp
+  print "Update Phone Number: "
+  params["phone_number"] = gets.chomp
+  response = Unirest.patch("http://localhost:3000/v1/contacts/#{input_id}", parameters: params)
+  updated_contact = response.body
+  puts JSON.pretty_generate(updated_contact)
 elsif input_option == "5"
-  response = Unirest.delete("http://localhost:3000/v1/first_contact")
+  print "Enter ID to delete: "
+  input_id = gets.chomp
+  response = Unirest.delete("http://localhost:3000/v1/contacts/#{input_id}")
+  body = response.body
+  puts JSON.pretty_generate(body)
 end
